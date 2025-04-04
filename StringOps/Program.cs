@@ -2,6 +2,12 @@
 
 internal class Program
 {
+    // Given list of words to be matched
+    static HashSet<string> _toMatch = new HashSet<string>()
+        {
+            "hello", "world", "hi", "my", "home", "we", "are", "the", "champion", "C#", "is", "a", "great", "languague"
+        };
+
     private static void Main(string[] args)
     {
         bool _exit = false;
@@ -19,6 +25,8 @@ internal class Program
             Console.WriteLine("8  - Find character(s) with max occurrences");
             Console.WriteLine("9  - Get all possible substrings in a string");
             Console.WriteLine("10 - Get and capitalize the first letter of each word in a sentence");
+            Console.WriteLine("11 - Get a list of words matching the given first letter");
+            Console.WriteLine("12 - Get a list of words matching the given character(s) anywhere");
             Console.WriteLine("X  - Exit");
 
             Console.Write("Your choice: ");
@@ -58,6 +66,12 @@ internal class Program
                     break;
                 case "10":
                     Prompt(GetFirstLetterCapitalOp, false, "First letter with capital: ");
+                    break;
+                case "11":
+                    Prompt(GetWordsMatchFirstLetterOp, false, "Words start with the given letter: ");
+                    break;
+                case "12":
+                    Prompt(GetWordsMatchAnywhereOp, false, "Words matched anywhere by the given letter: ");
                     break;
                 case "x":
                     _exit = true;
@@ -258,5 +272,41 @@ internal class Program
             _result.Append(_word.Substring(0, 1).ToUpper() + " ");
 
         return _result.ToString(0, _result.Length - 1);
+    }
+
+    private static string GetWordsMatchFirstLetterOp(string p_strInput)
+    {
+        StringBuilder _result = new StringBuilder();
+
+        // Algorithm 1
+        //foreach(string _word in _toMatch)
+        //    if (_word.StartsWith(p_strInput)) _result1.Append(_word + " ");
+
+        // Algorithm 2
+        foreach (string _word in _toMatch.Where(w => w.StartsWith(p_strInput)))
+            _result.Append(_word + " ");
+
+        if (_result.Length > 0)
+            return _result.ToString(0, _result.Length - 1);
+
+        return string.Empty;
+    }
+
+    private static string GetWordsMatchAnywhereOp(string p_strInput)
+    {
+        StringBuilder _result = new StringBuilder();
+
+        // Algorithm 1
+        foreach (string _word in _toMatch)
+            if (_word.IndexOf(p_strInput) != -1) _result.Append(_word + " ");
+
+        // Algorithm 2
+        //foreach (string _word in _toMatch.Where(w => w.IndexOf(p_strInput) != -1))
+        //    _result.Append(_word + " ");
+
+        if (_result.Length > 0)
+            return _result.ToString(0, _result.Length - 1);
+
+        return string.Empty;
     }
 }
