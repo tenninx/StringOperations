@@ -5,7 +5,9 @@ internal class Program
     // Given list of words to be matched
     static HashSet<string> _toMatch = new HashSet<string>()
         {
-            "hello", "world", "hi", "my", "home", "we", "are", "the", "champion", "C#", "is", "a", "great", "languague"
+            "hello", "world", "hi", "my", "home", "we", "are", "the", "champion", "C#", "is", "a", "great", "languague",
+            // Made up words
+            "champ", "cpamh", "ciiiwwws", "fhamp"
         };
 
     private static void Main(string[] args)
@@ -26,7 +28,8 @@ internal class Program
             Console.WriteLine("9  - Get all possible substrings in a string");
             Console.WriteLine("10 - Get and capitalize the first letter of each word in a sentence");
             Console.WriteLine("11 - Get a list of words matching the given first letter");
-            Console.WriteLine("12 - Get a list of words matching the given character(s) anywhere");
+            Console.WriteLine("12 - Get a list of words matching the given continuous character(s) anywhere");
+            Console.WriteLine("13 - Get a list of words matching the given character(s) randomly anywhere");
             Console.WriteLine("X  - Exit");
 
             Console.Write("Your choice: ");
@@ -71,7 +74,10 @@ internal class Program
                     Prompt(GetWordsMatchFirstLetterOp, false, "Words start with the given letter: ");
                     break;
                 case "12":
-                    Prompt(GetWordsMatchAnywhereOp, false, "Words matched anywhere by the given letter: ");
+                    Prompt(GetWordsMatchAnywhereOp, false, "Words matched anywhere by the given letter(s) in sequence: ");
+                    break;
+                case "13":
+                    Prompt(GetWordsMatchAnywhereRandomOp, false, "Words matched anywhere by the given letter(s) randomly but in order: ");
                     break;
                 case "x":
                     _exit = true;
@@ -303,6 +309,46 @@ internal class Program
         // Algorithm 2
         //foreach (string _word in _toMatch.Where(w => w.IndexOf(p_strInput) != -1))
         //    _result.Append(_word + " ");
+
+        if (_result.Length > 0)
+            return _result.ToString(0, _result.Length - 1);
+
+        return string.Empty;
+    }
+
+    private static string GetWordsMatchAnywhereRandomOp(string p_strInput)
+    {
+        if (string.IsNullOrEmpty(p_strInput))
+            return p_strInput;
+        else if (p_strInput.Length == 1)
+            return GetWordsMatchFirstLetterOp(p_strInput);
+
+        StringBuilder _result = new StringBuilder();
+        HashSet<string> _matched = _toMatch;
+
+        // Find the first char matching input
+        _matched = _matched.Where(w => w.IndexOf(p_strInput[0]) != -1).ToHashSet<string>();
+
+        // Eliminate words that don't match the input in order
+        foreach (string _word in _matched)
+        {
+            int _currentIdx = 0;
+            for (int i = 1; i < p_strInput.Length; i++)
+            {
+                int _idx = _word.IndexOf(p_strInput[i]);
+
+                if (_idx == -1 || _idx < _currentIdx)
+                {
+                    _matched.Remove(_word);
+                    _currentIdx = 0;
+                }
+
+                _currentIdx = _idx;
+            }
+        }
+
+        foreach (string _word in _matched)
+            _result.Append(_word + " ");
 
         if (_result.Length > 0)
             return _result.ToString(0, _result.Length - 1);
