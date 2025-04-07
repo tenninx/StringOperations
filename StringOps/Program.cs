@@ -2,12 +2,11 @@
 
 internal class Program
 {
-    // Given list of words to be matched
+    // Given list of words to be matched used in operation 11 to 13
     static HashSet<string> _toMatch = new HashSet<string>()
         {
-            "hello", "world", "hi", "my", "home", "we", "are", "the", "champion", "C#", "is", "a", "great", "languague",
-            // Made up words
-            "champ", "cpamh", "ciiiwwws", "fhamp"
+            "hello", "world", "hi", "my", "home", "we", "are", "the", "champion", "c#", "is", "a", "great", "languague",
+            "champ", "campaign", "champagne", "challenge", "chameleon", "chipotle", "castlevania"
         };
 
     private static void Main(string[] args)
@@ -197,8 +196,7 @@ internal class Program
     {
         string _temp = p_strInput.Replace(" ", "");
 
-        for (
-            int i = 0; i < _temp.Length / 2; i++)
+        for (int i = 0; i < _temp.Length / 2; i++)
             if (!_temp[i].Equals(_temp[_temp.Length - i - 1]))
                 return "False";
 
@@ -221,13 +219,16 @@ internal class Program
                     occurrences.Add(@char, 1);
             }
 
-        int _max = 0;
+        // Lambda
+        int _max = occurrences.Max(x => x.Value);
 
-        foreach (KeyValuePair<char, int> _pair in occurrences)
-        {
-            if (_pair.Value > _max)
-                _max = _pair.Value;
-        }
+        // Loop
+        //int _max = 0;
+        //foreach (KeyValuePair<char, int> _pair in occurrences)
+        //{
+        //    if (_pair.Value > _max)
+        //        _max = _pair.Value;
+        //}
 
         HashSet<char> _maxChars = new HashSet<char>();
 
