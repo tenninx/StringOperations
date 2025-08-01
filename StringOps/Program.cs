@@ -325,26 +325,27 @@ internal class Program
             return GetWordsMatchFirstLetterOp(p_strInput);
 
         StringBuilder _result = new StringBuilder();
-        HashSet<string> _matched = _toMatch;
+        HashSet<string> _matched = new HashSet<string>();
 
-        // Find the first char matching input
-        _matched = _matched.Where(w => w.IndexOf(p_strInput[0]) != -1).ToHashSet<string>();
-
-        // Eliminate words that don't match the input in order
-        foreach (string _word in _matched)
+        // Add the words that match the occurence sequence of the input characters
+        foreach (string _word in _toMatch)
         {
-            int _currentIdx = 0;
-            for (int i = 1; i < p_strInput.Length; i++)
+            int _currentIdx = -1;
+            for (int i = 0; i < p_strInput.Length; i++)
             {
-                int _idx = _word.IndexOf(p_strInput[i]);
+                var _substring = _word.Substring(_currentIdx + 1);
+                int _idx = _substring.IndexOf(p_strInput[i]);
 
-                if (_idx == -1 || _idx < _currentIdx)
+                if (_idx == -1)
+                    break;
+
+                if (i + 1 < p_strInput.Length)
                 {
-                    _matched.Remove(_word);
-                    _currentIdx = 0;
+                    _currentIdx = _idx;
+                    continue;
                 }
 
-                _currentIdx = _idx;
+                _matched.Add(_word);
             }
         }
 
